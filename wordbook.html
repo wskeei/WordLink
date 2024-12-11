@@ -171,6 +171,10 @@
       gap: 10px;
     }
 
+    .file-input {
+      display: none;
+    }
+
     .import-button {
       background: #34C759;
       color: white;
@@ -180,6 +184,7 @@
       cursor: pointer;
       font-size: 14px;
       transition: background-color 0.2s;
+      display: inline-block;
     }
 
     .import-button:hover {
@@ -222,10 +227,10 @@
     </form>
 
     <div class="import-section">
-      <input type="file" id="fileInput" accept=".txt,.md" style="display: none;">
-      <button class="import-button" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept=".txt,.md" class="file-input">
+      <label for="fileInput" class="import-button">
         导入单词文档
-      </button>
+      </label>
       <span class="import-tip">支持 .txt 和 .md 格式，可以导入有序/无序列表或空格分隔的单词</span>
     </div>
 
