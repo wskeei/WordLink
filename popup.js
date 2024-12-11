@@ -99,6 +99,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
   
+  // 添加生词本按钮点击事件
+  document.getElementById('openWordbook').addEventListener('click', () => {
+    // 在新标签页中打开生词本
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('wordbook.html')
+    });
+  });
+  
   // 初始加载
   await loadWords();
 }); 

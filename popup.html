@@ -16,6 +16,35 @@
       margin-bottom: 15px;
     }
     
+    .wordbook-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    
+    .wordbook-button:hover {
+      background: #0056b3;
+    }
+    
+    .search-box {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
     .sort-controls {
       display: flex;
       gap: 10px;
@@ -35,15 +64,6 @@
       background: #007AFF;
       color: white;
       border-color: #007AFF;
-    }
-    
-    .search-box {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      font-size: 14px;
     }
     
     .word-list {
@@ -98,6 +118,8 @@
     <h3>我的生词本</h3>
     <span id="wordCount">0 个单词</span>
   </div>
+  
+  <button class="wordbook-button" id="openWordbook">打开完整生词本</button>
   
   <input type="text" class="search-box" id="searchBox" placeholder="搜索单词...">
   

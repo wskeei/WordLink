@@ -6,7 +6,8 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "action": {
     "default_popup": "popup.html"
@@ -17,5 +18,9 @@
       "js": ["content.js"],
       "css": ["styles.css"]
     }
-  ]
+  ],
+  "web_accessible_resources": [{
+    "resources": ["wordbook.html"],
+    "matches": ["<all_urls>"]
+  }]
 } 
