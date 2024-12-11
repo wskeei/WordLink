@@ -111,11 +111,36 @@
       padding: 20px;
       font-size: 14px;
     }
+    
+    .style-selector {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .style-button {
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .style-button.active {
+      background: #007AFF;
+      color: white;
+      border-color: #007AFF;
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <h3>我的生词本</h3>
+    <div class="style-selector">
+      <button class="style-button active" data-style="highlight">高亮</button>
+      <button class="style-button" data-style="underline">下划线</button>
+    </div>
     <span id="wordCount">0 个单词</span>
   </div>
   

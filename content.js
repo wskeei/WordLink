@@ -1,7 +1,7 @@
 // 从存储中获取已保存的单词并高亮显示
 async function highlightSavedWords() {
   // 先清除所有已有的高亮
-  const highlightedWords = document.querySelectorAll('.highlighted-word');
+  const highlightedWords = document.querySelectorAll('.highlighted-word, .underlined-word');
   highlightedWords.forEach(element => {
     const text = element.textContent;
     const textNode = document.createTextNode(text);
@@ -12,6 +12,7 @@ async function highlightSavedWords() {
   document.normalize();
   
   const { words = [] } = await chrome.storage.sync.get('words');
+  const { highlightStyle = 'highlight' } = await chrome.storage.sync.get('highlightStyle');
   
   if (words.length === 0) return;
   const wordRegex = new RegExp(`\\b(${words.join('|')})\\b`, 'gi');
@@ -21,7 +22,8 @@ async function highlightSavedWords() {
       const text = node.textContent;
       if (wordRegex.test(text)) {
         const span = document.createElement('span');
-        span.innerHTML = text.replace(wordRegex, '<span class="highlighted-word">$1</span>');
+        const className = highlightStyle === 'highlight' ? 'highlighted-word' : 'underlined-word';
+        span.innerHTML = text.replace(wordRegex, `<span class="${className}">$1</span>`);
         node.parentNode.replaceChild(span, node);
       }
     } else {
@@ -33,6 +35,13 @@ async function highlightSavedWords() {
   
   walkText(document.body);
 }
+
+// 监听来自 popup 的样式更新消息
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'updateStyle') {
+    highlightSavedWords();
+  }
+});
 
 // 检查是否为英文单词
 function isEnglishWord(text) {
@@ -101,7 +110,7 @@ document.addEventListener('mouseup', (e) => {
         currentButton = button;
         currentWord = word;
         
-        // 添��点击事件
+        // 添加点击事件
         button.addEventListener('click', async (e) => {
           e.stopPropagation();
           const { words = [] } = await chrome.storage.sync.get('words');

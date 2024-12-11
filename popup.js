@@ -107,6 +107,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
   
+  // 添加样式切换功能
+  const styleButtons = document.querySelectorAll('.style-button');
+  
+  styleButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      styleButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      const style = button.dataset.style;
+      await chrome.storage.sync.set({ highlightStyle: style });
+      
+      // 通知当前标签页更新样式
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab) {
+        chrome.tabs.sendMessage(tab.id, { type: 'updateStyle', style });
+      }
+    });
+  });
+  
+  // 初始化样式按钮状态
+  const { highlightStyle = 'highlight' } = await chrome.storage.sync.get('highlightStyle');
+  styleButtons.forEach(button => {
+    if (button.dataset.style === highlightStyle) {
+      button.classList.add('active');
+    }
+  });
+  
   // 初始加载
   await loadWords();
 }); 
