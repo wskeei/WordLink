@@ -4,39 +4,110 @@
   <meta charset="UTF-8">
   <style>
     body {
-      width: 300px;
+      width: 350px;
       padding: 15px;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .sort-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .sort-button {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .sort-button.active {
+      background: #007AFF;
+      color: white;
+      border-color: #007AFF;
+    }
+    
+    .search-box {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
     .word-list {
-      max-height: 200px;
+      max-height: 300px;
       overflow-y: auto;
       margin: 10px 0;
     }
+    
     .word-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px;
+      padding: 8px;
       border-bottom: 1px solid #eee;
     }
-    button {
-      background: #007AFF;
+    
+    .word-info {
+      flex-grow: 1;
+    }
+    
+    .word-text {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    
+    .word-date {
+      font-size: 11px;
+      color: #666;
+    }
+    
+    button.delete {
+      background: #FF3B30;
       color: white;
       border: none;
       padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
-    }
-    button.delete {
-      background: #FF3B30;
       font-size: 12px;
+      margin-left: 10px;
+    }
+    
+    .empty-message {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h3>我的生词本</h3>
+  <div class="header">
+    <h3>我的生词本</h3>
+    <span id="wordCount">0 个单词</span>
+  </div>
+  
+  <input type="text" class="search-box" id="searchBox" placeholder="搜索单词...">
+  
+  <div class="sort-controls">
+    <button class="sort-button active" data-sort="time">按时间排序</button>
+    <button class="sort-button" data-sort="alpha">按字母排序</button>
+  </div>
+  
   <div class="word-list" id="wordList"></div>
+  
   <script src="popup.js"></script>
 </body>
 </html> 

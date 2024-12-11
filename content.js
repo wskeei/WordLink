@@ -89,11 +89,14 @@ document.addEventListener('mouseup', (e) => {
         
         // 添加点击事件
         button.addEventListener('click', async (e) => {
-          e.stopPropagation(); // 阻止事件冒泡
+          e.stopPropagation();
           const { words = [] } = await chrome.storage.sync.get('words');
+          const { wordDates = {} } = await chrome.storage.sync.get('wordDates');
+          
           if (!words.includes(currentWord)) {
             words.push(currentWord);
-            await chrome.storage.sync.set({ words });
+            wordDates[currentWord] = Date.now();
+            await chrome.storage.sync.set({ words, wordDates });
             highlightSavedWords();
             button.remove();
             currentButton = null;
