@@ -1,0 +1,9 @@
+.highlighted-word {
+  background-color: #FFE082;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.highlighted-word:hover {
+  background-color: #FFD54F;
+} 

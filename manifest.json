@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "WordHighlighter",
+  "version": "1.0",
+  "description": "标记并高亮网页中的生词，帮助英语学习",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+} 
