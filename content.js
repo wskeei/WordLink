@@ -2,11 +2,9 @@
 async function highlightSavedWords() {
   const { words = [] } = await chrome.storage.sync.get('words');
   
-  // 创建一个正则表达式来匹配所有保存的单词
   if (words.length === 0) return;
   const wordRegex = new RegExp(`\\b(${words.join('|')})\\b`, 'gi');
   
-  // 遍历文本节点并高亮匹配的单词
   function walkText(node) {
     if (node.nodeType === 3) {
       const text = node.textContent;
@@ -27,24 +25,93 @@ async function highlightSavedWords() {
 
 // 检查是否为英文单词
 function isEnglishWord(text) {
-  // 只匹配由英文字母组成的单词（可以包含连字符和撇号）
   return /^[a-zA-Z]+(?:[-'][a-zA-Z]+)*$/.test(text);
 }
 
-// 添加双击选词功能
-document.addEventListener('dblclick', async (e) => {
-  const selection = window.getSelection();
-  const word = selection.toString().trim().toLowerCase();
-  
-  // 只有当选中的是英文单词时才进行处理
-  if (word && isEnglishWord(word)) {
-    const { words = [] } = await chrome.storage.sync.get('words');
-    if (!words.includes(word)) {
-      words.push(word);
-      await chrome.storage.sync.set({ words });
-      highlightSavedWords();
-    }
+// 创建添加按钮
+function createAddButton() {
+  const button = document.createElement('div');
+  button.className = 'word-add-button';
+  button.innerHTML = '+';
+  return button;
+}
+
+// 处理选中文本
+let currentButton = null;
+let currentWord = null;
+let isSelecting = false;
+
+// 开始选择文本
+document.addEventListener('mousedown', (e) => {
+  // 如果点击的是当前按钮，不做任何处理
+  if (currentButton && currentButton.contains(e.target)) {
+    return;
   }
+  
+  isSelecting = true;
+  if (currentButton) {
+    currentButton.remove();
+    currentButton = null;
+    currentWord = null;
+  }
+});
+
+// 处理选中文本结束事件
+document.addEventListener('mouseup', (e) => {
+  // 如果点击的是当前按钮，不做处理
+  if (currentButton && currentButton.contains(e.target)) {
+    return;
+  }
+
+  // 确保是在完成选择后
+  setTimeout(() => {
+    if (isSelecting) {
+      const selection = window.getSelection();
+      const word = selection.toString().trim().toLowerCase();
+      
+      // 如果选中了新的有效单词
+      if (word && isEnglishWord(word)) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        // 创建新按钮
+        const button = createAddButton();
+        document.body.appendChild(button);
+        
+        // 设置按钮位置
+        const top = window.scrollY + rect.top - 30;
+        const left = window.scrollX + rect.right + 5;
+        button.style.top = `${top}px`;
+        button.style.left = `${left}px`;
+        
+        currentButton = button;
+        currentWord = word;
+        
+        // 添加点击事件
+        button.addEventListener('click', async (e) => {
+          e.stopPropagation(); // 阻止事件冒泡
+          const { words = [] } = await chrome.storage.sync.get('words');
+          if (!words.includes(currentWord)) {
+            words.push(currentWord);
+            await chrome.storage.sync.set({ words });
+            highlightSavedWords();
+            button.remove();
+            currentButton = null;
+            currentWord = null;
+          }
+        });
+      }
+      // 如果点击了页面其他地方（没有选中单词）
+      else if (!word) {
+        if (currentButton) {
+          currentButton.remove();
+          currentButton = null;
+          currentWord = null;
+        }
+      }
+    }
+    isSelecting = false;
+  }, 10);
 });
 
 // 页面加载完成后高亮已保存的单词

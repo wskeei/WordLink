@@ -6,4 +6,26 @@
 
 .highlighted-word:hover {
   background-color: #FFD54F;
+}
+
+.word-add-button {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: #007AFF;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 999999;
+  transition: transform 0.2s ease;
+}
+
+.word-add-button:hover {
+  transform: scale(1.1);
+  background-color: #0056b3;
 } 
