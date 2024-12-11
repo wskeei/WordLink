@@ -1,5 +1,16 @@
 // 从存储中获取已保存的单词并高亮显示
 async function highlightSavedWords() {
+  // 先清除所有已有的高亮
+  const highlightedWords = document.querySelectorAll('.highlighted-word');
+  highlightedWords.forEach(element => {
+    const text = element.textContent;
+    const textNode = document.createTextNode(text);
+    element.parentNode.replaceChild(textNode, element);
+  });
+
+  // 合并相邻的文本节点
+  document.normalize();
+  
   const { words = [] } = await chrome.storage.sync.get('words');
   
   if (words.length === 0) return;
@@ -90,7 +101,7 @@ document.addEventListener('mouseup', (e) => {
         currentButton = button;
         currentWord = word;
         
-        // 添加点击事件
+        // 添��点击事件
         button.addEventListener('click', async (e) => {
           e.stopPropagation();
           const { words = [] } = await chrome.storage.sync.get('words');
