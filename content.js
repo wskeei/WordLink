@@ -28,11 +28,11 @@ function isEnglishWord(text) {
   return /^[a-zA-Z]+(?:[-'][a-zA-Z]+)*$/.test(text);
 }
 
-// 创建添加按钮
-function createAddButton() {
+// 创建按钮
+function createActionButton(isAdded) {
   const button = document.createElement('div');
-  button.className = 'word-add-button';
-  button.innerHTML = '+';
+  button.className = `word-action-button ${isAdded ? 'remove' : 'add'}`;
+  button.innerHTML = isAdded ? '−' : '+';
   return button;
 }
 
@@ -64,18 +64,21 @@ document.addEventListener('mouseup', (e) => {
   }
 
   // 确保是在完成选择后
-  setTimeout(() => {
+  setTimeout(async () => {
     if (isSelecting) {
       const selection = window.getSelection();
       const word = selection.toString().trim().toLowerCase();
       
       // 如果选中了新的有效单词
       if (word && isEnglishWord(word)) {
+        const { words = [] } = await chrome.storage.sync.get('words');
+        const isWordAdded = words.includes(word);
+        
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
         // 创建新按钮
-        const button = createAddButton();
+        const button = createActionButton(isWordAdded);
         document.body.appendChild(button);
         
         // 设置按钮位置
@@ -93,15 +96,24 @@ document.addEventListener('mouseup', (e) => {
           const { words = [] } = await chrome.storage.sync.get('words');
           const { wordDates = {} } = await chrome.storage.sync.get('wordDates');
           
-          if (!words.includes(currentWord)) {
-            words.push(currentWord);
-            wordDates[currentWord] = Date.now();
-            await chrome.storage.sync.set({ words, wordDates });
-            highlightSavedWords();
-            button.remove();
-            currentButton = null;
-            currentWord = null;
+          if (isWordAdded) {
+            // 删除单词
+            const newWords = words.filter(w => w !== currentWord);
+            delete wordDates[currentWord];
+            await chrome.storage.sync.set({ words: newWords, wordDates });
+          } else {
+            // 添加单词
+            if (!words.includes(currentWord)) {
+              words.push(currentWord);
+              wordDates[currentWord] = Date.now();
+              await chrome.storage.sync.set({ words, wordDates });
+            }
           }
+          
+          highlightSavedWords();
+          button.remove();
+          currentButton = null;
+          currentWord = null;
         });
       }
       // 如果点击了页面其他地方（没有选中单词）

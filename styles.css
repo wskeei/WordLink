@@ -28,4 +28,40 @@
 .word-add-button:hover {
   transform: scale(1.1);
   background-color: #0056b3;
+}
+
+.word-action-button {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 999999;
+  transition: transform 0.2s ease;
+}
+
+.word-action-button.add {
+  background-color: #007AFF;
+}
+
+.word-action-button.remove {
+  background-color: #FF3B30;
+}
+
+.word-action-button:hover {
+  transform: scale(1.1);
+}
+
+.word-action-button.add:hover {
+  background-color: #0056b3;
+}
+
+.word-action-button.remove:hover {
+  background-color: #dc3545;
 } 
